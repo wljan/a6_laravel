@@ -23,6 +23,8 @@
                         <button class="p-2 bg-indigo-400 w-1/3 m-auto rounded-md text-neutral-50" type="submit">Submit</button>
                 </form>
 
+                <x-image-list :images="$images" />
+
                 </div>
             </div>
         </div>

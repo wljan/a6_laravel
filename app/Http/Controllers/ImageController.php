@@ -6,36 +6,36 @@ use Illuminate\Http\Request;
 use App\Models\Image;
 use Illuminate\Support\Facades\Auth;
 
-class ContactController extends Controller
+class ImageController extends Controller
 {
 
     public function index()
-    {
-        $user = Auth::user();
-        $images = $user->images;
-        return view('dashboard', ['contacts' => $images]);
-    }
+{
+    $images = Image::all();
 
-    public function store(Request $request)
-    {
-        $validatedData = $request->validate([
-            'title' => 'required|min:3',
-            'image' => 'required|file|mimes:jpeg,jpg,png',
-        ]);
+    return view('dashboard', ['images' => $images]);
+}
 
-        $user = Auth::user();
+public function store(Request $request)
+{
+    $validatedData = $request->validate([
+        'title' => 'required|min:3',
+        'image' => 'required|file|mimes:jpeg,jpg,png',
+    ]);
 
-        // Access the 'image' file from the validated data
-        $image = $request->file('image');
+    $user = Auth::user();
 
-        // Store the image file in the 'public/images' directory
-        $imagePath = $image->store('images', 'public');
+    // Access the 'image' file from the validated data
+    $image = $request->file('image');
 
-        $newImage = $user->images()->create([
-            'title' => $validatedData['title'],
-            'image_path' => $imagePath,
-        ]);
+    // Store the image file in the 'public/images' directory
+    $imagePath = $image->store('images', 'public');
 
-        return back();
-    }
+    $newImage = $user->images()->create([
+        'title' => $validatedData['title'],
+        'image_path' => $imagePath,
+    ]);
+
+    return redirect()->route('dashboard.index')->with('success', 'Image uploaded successfully!');
+}
 }
